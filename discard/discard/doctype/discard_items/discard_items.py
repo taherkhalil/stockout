@@ -9,9 +9,6 @@ from frappe.model.document import Document
 
 class Discarditems(Document):
 	def on_submit(self):
-		frappe.errprint("in on on_submit")
-		# it = self.get('items')
-		# frappe.errprint(it)
 		se = frappe.new_doc("Stock Entry")
 		se.purpose = "Material Receipt" 
 		for items in self.get('items'):
@@ -19,8 +16,9 @@ class Discarditems(Document):
 			row.t_warehouse =items.warehouse
 			row.item_code = items .item
 			row.qty= -items.quantity
-			expense_account =self.expense_account
+			row.expense_account =self.expense_account		
 		se.insert(ignore_permissions=True)
+		se.save()
 		se.submit()
 
 
@@ -30,11 +28,11 @@ def get_valuation(item_code):
 	from `tabStock Ledger Entry`
 	where item_code = %s and valuation_rate > 0
 	order by posting_date desc, posting_time desc, name desc limit 1""", item_code)
-	frappe.errprint(last_valuation_rate)
+	# frappe.errprint(last_valuation_rate)
 	if not last_valuation_rate:
 		frappe.throw("no valuation_rate for item,check item ")
 	valuation_rate = flt(last_valuation_rate[0][0])
-	frappe.errprint(valuation_rate)
+	# frappe.errprint(valuation_rate)
 
 	return valuation_rate
 

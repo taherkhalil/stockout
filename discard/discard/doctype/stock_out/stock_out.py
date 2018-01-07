@@ -18,7 +18,7 @@ class StockOUT(Document):
 			row.t_warehouse =items.warehouse
 			row.item_code = items .item
 			row.qty= -items.quantity
-			expense_account =self.expense_account
+			row.expense_account =self.expense_account
 		se.insert(ignore_permissions=True)
 		se.submit()
 	
